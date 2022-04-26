@@ -8,8 +8,8 @@ RSpec.describe Grid do
   subject(:grid) { described_class.new }
   let(:columns) { grid.instance_variable_get(:@columns) }
 
-  describe '#show' do
-  end
+  # describe '#show' do
+  # end
 
   describe '#insert_token' do
     let(:column) { 3 }
@@ -17,7 +17,8 @@ RSpec.describe Grid do
 
     context 'when the chosen column is empty' do
       it 'adds a token in the first avaible slot' do
-        expect { grid.insert_token(column, token) }.to change { columns[column] }
+        expect { grid.insert_token(column, token) }
+          .to change { columns[column] }
           .from([' ', ' ', ' ', ' ', ' ', ' '])
           .to([' ', ' ', ' ', ' ', ' ', token])
       end
@@ -96,11 +97,198 @@ RSpec.describe Grid do
     end
   end
 
-  describe '#winner?' do
+  describe '#vertically_connected?' do
+    let(:column) { 3 }
+    let(:index) { 2 }
+
+    context 'when @last_slot is too low' do
+      before do
+        index = 3
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X X O O O],
+                                               %w[O O O X X X],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_vertically_connected
+      end
+    end
+
+    context 'when there is no vertical connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X X O O O],
+                                               %w[O X O X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_vertically_connected
+      end
+    end
+
+    context 'when there is a vertical connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X X O O O],
+                                               %w[O X O O O O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns true' do
+        expect(grid).to be_vertically_connected
+      end
+    end
   end
 
-  describe '#end?' do
+  describe '#horizontally_connected?' do
+    let(:column) { 3 }
+    let(:index) { 2 }
+
+    context 'when there is no horizontal connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X X O O O],
+                                               %w[O X O X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_horizontally_connected
+      end
+    end
+
+    context 'when there is an horizontal connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X O O O O],
+                                               %w[O X O X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns true' do
+        expect(grid).to be_horizontally_connected
+      end
+    end
   end
+
+  describe '#diagonally_connected?' do
+    let(:column) { 3 }
+    let(:index) { 2 }
+
+    context 'when there is no diagonal connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X X O O O],
+                                               %w[O X O X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_diagonally_connected
+      end
+    end
+
+    context 'when there is a diagonal connection' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O X O X],
+                                               %w[O X O O O O],
+                                               %w[O X X X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X X O X],
+                                               %w[X O X O X X]])
+        grid.instance_variable_set(:@last_slot, [column, index])
+        grid.instance_variable_set(:@last_token, 'X')
+      end
+
+      it 'returns true' do
+        expect(grid).to be_diagonally_connected
+      end
+    end
+  end
+
+  describe '#winner?' do
+    let(:column) { 3 }
+    let(:index) { 2 }
+    let(:token) { 'X' }
+
+    context 'when there is no connection' do
+      before do
+        allow(grid).to receive(:vertically_connected?).and_return(false)
+        allow(grid).to receive(:horizontally_connected?).and_return(false)
+        allow(grid).to receive(:diagonally_connected?).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_winner
+      end
+    end
+
+    context 'when there is a vertical connection' do
+      before do
+        allow(grid).to receive(:vertically_connected?).and_return(true)
+        allow(grid).to receive(:horizontally_connected?).and_return(false)
+        allow(grid).to receive(:diagonally_connected?).and_return(false)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_winner
+      end
+    end
+
+    context 'when there is an horizontal connection' do
+      before do
+        allow(grid).to receive(:vertically_connected?).and_return(false)
+        allow(grid).to receive(:horizontally_connected?).and_return(true)
+        allow(grid).to receive(:diagonally_connected?).and_return(false)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_winner
+      end
+    end
+
+    context 'when there is a diagonal connection' do
+      before do
+        allow(grid).to receive(:vertically_connected?).and_return(false)
+        allow(grid).to receive(:horizontally_connected?).and_return(false)
+        allow(grid).to receive(:diagonally_connected?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_winner
+      end
+    end
+  end
+
+  # describe '#end?' do
+  # end
 end
 
 # rubocop: enable Metrics/BlockLength
