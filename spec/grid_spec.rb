@@ -14,14 +14,19 @@ RSpec.describe Grid do
 
     context 'when the chosen column is empty' do
       it 'adds a token in the first avaible slot' do
+        starting_value = [' ', ' ', ' ', ' ', ' ', ' ']
+        ending_value = [' ', ' ', ' ', ' ', ' ', token]
+
         expect { grid.insert_token(column, token) }
           .to change { columns[column] }
-          .from([' ', ' ', ' ', ' ', ' ', ' '])
-          .to([' ', ' ', ' ', ' ', ' ', token])
+          .from(starting_value).to(ending_value)
       end
 
       it 'returns the index it was inserted' do
-        expect(grid.insert_token(column, token)).to be(5)
+        method_return = grid.insert_token(column, token)
+        inserted_index = 5
+
+        expect(method_return).to be(inserted_index)
       end
     end
 
@@ -37,14 +42,19 @@ RSpec.describe Grid do
       end
 
       it 'adds a token in the first avaible slot' do
+        starting_value = [' ', ' ', 'O', 'X', 'X', 'O']
+        ending_value = [' ', token, 'O', 'X', 'X', 'O']
+
         expect { grid.insert_token(column, token) }
           .to change { columns[column] }
-          .from([' ', ' ', 'O', 'X', 'X', 'O'])
-          .to([' ', token, 'O', 'X', 'X', 'O'])
+          .from(starting_value).to(ending_value)
       end
 
       it 'returns the index it was inserted' do
-        expect(grid.insert_token(column, token)).to be(1)
+        method_return = grid.insert_token(column, token)
+        inserted_index = 1
+
+        expect(method_return).to be(inserted_index)
       end
     end
 
@@ -65,7 +75,9 @@ RSpec.describe Grid do
       end
 
       it 'returns nil' do
-        expect(grid.insert_token(column, token)).to be_nil
+        method_return = grid.insert_token(column, token)
+
+        expect(method_return).to be_nil
       end
     end
   end
