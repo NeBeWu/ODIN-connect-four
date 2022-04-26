@@ -8,9 +8,6 @@ RSpec.describe Grid do
   subject(:grid) { described_class.new }
   let(:columns) { grid.instance_variable_get(:@columns) }
 
-  # describe '#show' do
-  # end
-
   describe '#insert_token' do
     let(:column) { 3 }
     let(:token) { 'X' }
@@ -234,10 +231,6 @@ RSpec.describe Grid do
   end
 
   describe '#winner?' do
-    let(:column) { 3 }
-    let(:index) { 2 }
-    let(:token) { 'X' }
-
     context 'when there is no connection' do
       before do
         allow(grid).to receive(:vertically_connected?).and_return(false)
@@ -287,8 +280,51 @@ RSpec.describe Grid do
     end
   end
 
-  # describe '#end?' do
-  # end
+  describe '#end?' do
+    context 'when there is no winner and grid is not full' do
+      before do
+        allow(grid).to receive(:winner?).and_return(false)
+        allow(grid).to receive(:full?).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(grid).to_not be_end
+      end
+    end
+
+    context 'when there is a winner and grid is not full' do
+      before do
+        allow(grid).to receive(:winner?).and_return(true)
+        allow(grid).to receive(:full?).and_return(false)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_end
+      end
+    end
+
+    context 'when there is no winner and grid is full' do
+      before do
+        allow(grid).to receive(:winner?).and_return(false)
+        allow(grid).to receive(:full?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_end
+      end
+    end
+
+    context 'when there is a winner and grid is full' do
+      before do
+        allow(grid).to receive(:winner?).and_return(true)
+        allow(grid).to receive(:full?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(grid).to be_end
+      end
+    end
+  end
 end
 
 # rubocop: enable Metrics/BlockLength

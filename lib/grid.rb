@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'interface'
+
 class Grid
+  include Interface
+
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }
     @last_slot = [0, 5]
@@ -39,18 +43,8 @@ class Grid
     vertically_connected? || horizontally_connected? || diagonally_connected?
   end
 
-  def show
-    6.times do |row|
-      print "-----------------------------\n"
-
-      @columns.each do |column|
-        print "| #{column[row]} "
-      end
-
-      print "|\n"
-    end
-
-    print "-----------------------------\n"
+  def end?
+    winner? || full?
   end
 
   private
