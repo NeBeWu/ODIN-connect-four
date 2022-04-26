@@ -6,12 +6,12 @@ require_relative '../lib/grid'
 
 RSpec.describe Grid do
   subject(:grid) { described_class.new }
+  let(:columns) { grid.instance_variable_get(:@columns) }
 
   describe '#show' do
   end
 
   describe '#insert_token' do
-    let(:columns) { grid.instance_variable_get(:@columns) }
     let(:column) { 3 }
     let(:token) { 'X' }
 
@@ -73,6 +73,27 @@ RSpec.describe Grid do
   end
 
   describe '#full?' do
+    context 'when the grid is not full' do
+      it 'returns false' do
+        expect(grid).to_not be_full
+      end
+    end
+
+    context 'when the grid is full' do
+      before do
+        grid.instance_variable_set(:@columns, [%w[X X O O O X],
+                                               %w[X O O O X X],
+                                               %w[O O X X O O],
+                                               %w[O X O X X O],
+                                               %w[O X X X O O],
+                                               %w[X O X O O X],
+                                               %w[X O O X X X]])
+      end
+
+      it 'returns true' do
+        expect(grid).to be_full
+      end
+    end
   end
 
   describe '#winner?' do

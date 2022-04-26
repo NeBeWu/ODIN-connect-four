@@ -13,6 +13,10 @@ class Grid
     index
   end
 
+  def full?
+    @columns.all? { |column| column.first != ' ' }
+  end
+
   def show
     6.times do |row|
       print "-----------------------------\n"
