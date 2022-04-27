@@ -24,4 +24,14 @@ RSpec.describe Player do
         .from(starting_token).to(ending_token)
     end
   end
+
+  describe '#insert_number' do
+    it 'changes @number' do
+      starting_number = nil
+      ending_number = '1'
+
+      expect { player.insert_number(ending_number) }.to change { player.number }
+        .from(starting_number).to(ending_number)
+    end
+  end
 end
