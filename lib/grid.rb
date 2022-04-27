@@ -1,14 +1,24 @@
 # frozen_string_literal: true
 
-require_relative 'interfaces'
-
 class Grid
-  include Interfaces::GridInterface
-
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }
     @last_slot = nil
     @last_token = nil
+  end
+
+  def show
+    6.times do |row|
+      print "-----------------------------\n"
+
+      @columns.each do |column|
+        print "| #{column[row]} "
+      end
+
+      print "|\n"
+    end
+
+    print "-----------------------------\n"
   end
 
   def insert_token(column, token)
