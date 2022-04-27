@@ -220,11 +220,6 @@ RSpec.describe Interface do
                                                         validation)
       dummy_class.fetch_name(player)
     end
-
-    it 'inserts name' do
-      expect(player).to receive(:insert_name).with(input)
-      dummy_class.fetch_name(player)
-    end
   end
 
   describe '#fetch_token' do
@@ -242,11 +237,6 @@ RSpec.describe Interface do
     it 'fetches input' do
       expect(dummy_class).to receive(:fetch_input).with(message, error_message,
                                                         validation)
-      dummy_class.fetch_token(player)
-    end
-
-    it 'inserts token' do
-      expect(player).to receive(:insert_token).with(input)
       dummy_class.fetch_token(player)
     end
   end
