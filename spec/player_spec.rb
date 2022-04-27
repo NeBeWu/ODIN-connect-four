@@ -3,7 +3,7 @@
 require_relative '../lib/player'
 
 RSpec.describe Player do
-  subject(:player) { described_class.new('Rudolf', 'X') }
+  subject(:player) { described_class.new('Rudolf', 'X', '1') }
 
   describe '#insert_name' do
     it 'changes @name' do
@@ -27,8 +27,8 @@ RSpec.describe Player do
 
   describe '#insert_number' do
     it 'changes @number' do
-      starting_number = nil
-      ending_number = '1'
+      starting_number = '1'
+      ending_number = '0'
 
       expect { player.insert_number(ending_number) }.to change { player.number }
         .from(starting_number).to(ending_number)
