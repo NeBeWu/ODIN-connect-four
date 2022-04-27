@@ -3,12 +3,12 @@
 require_relative 'interface'
 
 class Grid
-  include Interface
+  include Interface::Grid
 
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }
-    @last_slot = [0, 5]
-    @last_token = 'O'
+    @last_slot = nil
+    @last_token = nil
   end
 
   def insert_token(column, token)

@@ -155,6 +155,7 @@ RSpec.describe Grid do
                                                %w[X O X O O X],
                                                %w[X O X O X X]])
         grid.instance_variable_set(:@last_slot, [column, index])
+        grid.instance_variable_set(:@last_token, 'O')
       end
 
       it 'returns true' do
@@ -194,6 +195,7 @@ RSpec.describe Grid do
                                                %w[X O X O O X],
                                                %w[X O X O X X]])
         grid.instance_variable_set(:@last_slot, [column, index])
+        grid.instance_variable_set(:@last_token, 'O')
       end
 
       it 'returns true' do
