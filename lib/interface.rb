@@ -13,17 +13,17 @@ module Interface
     input
   end
 
-  def fetch_name(player)
+  def fetch_name(number)
     fetch_input(
-      "Please, enter your name player #{player.number}.",
+      "Please, enter your name player #{number}.",
       'Wrong input! Please enter 1 to 10 word characters.',
       :validate_name
     )
   end
 
-  def fetch_token(player)
+  def fetch_token(number)
     fetch_input(
-      "Please, enter your token player #{player.number}.",
+      "Please, enter your token player #{number}.",
       'Wrong input! Please enter a non-numeric word character.',
       :validate_token
     )

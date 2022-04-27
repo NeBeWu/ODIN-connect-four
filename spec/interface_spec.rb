@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../lib/interface'
-require_relative '../lib/player'
 
 # rubocop: disable Metrics/BlockLength
 
 RSpec.describe Interface do
   subject(:dummy_class) { Class.new.extend(described_class) }
-  let(:player) { Player.new('Pablo', 'P', '3') }
+  let(:number) { 1 }
 
   describe '#fetch_input' do
     let(:message) { 'Message' }
@@ -206,7 +205,7 @@ RSpec.describe Interface do
   end
 
   describe '#fetch_name' do
-    let(:message) { "Please, enter your name player #{player.number}." }
+    let(:message) { "Please, enter your name player #{number}." }
     let(:error_message) { 'Wrong input! Please enter 1 to 10 word characters.' }
     let(:validation) { :validate_name }
     let(:input) { 'Name' }
@@ -218,12 +217,12 @@ RSpec.describe Interface do
     it 'fetches input' do
       expect(dummy_class).to receive(:fetch_input).with(message, error_message,
                                                         validation)
-      dummy_class.fetch_name(player)
+      dummy_class.fetch_name(number)
     end
   end
 
   describe '#fetch_token' do
-    let(:message) { "Please, enter your token player #{player.number}." }
+    let(:message) { "Please, enter your token player #{number}." }
     let(:error_message) do
       'Wrong input! Please enter a non-numeric word character.'
     end
@@ -237,7 +236,7 @@ RSpec.describe Interface do
     it 'fetches input' do
       expect(dummy_class).to receive(:fetch_input).with(message, error_message,
                                                         validation)
-      dummy_class.fetch_token(player)
+      dummy_class.fetch_token(number)
     end
   end
 end
