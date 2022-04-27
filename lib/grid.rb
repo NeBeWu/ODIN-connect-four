@@ -29,6 +29,16 @@ class Grid
     index
   end
 
+  def free_columns
+    free_columns = []
+
+    @columns.each_index do |index|
+      free_columns << index if @columns[index].first == ' '
+    end
+
+    free_columns
+  end
+
   def full?
     @columns.all? { |column| column.first != ' ' }
   end

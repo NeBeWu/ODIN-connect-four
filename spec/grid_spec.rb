@@ -82,6 +82,24 @@ RSpec.describe Grid do
     end
   end
 
+  describe '#free_columns' do
+    before do
+      grid.instance_variable_set(:@columns, [[' ', ' ', ' ', ' ', ' ', ' '],
+                                             %w[X X O O O X],
+                                             [' ', ' ', ' ', 'O', 'X', 'O'],
+                                             %w[X X O X X O],
+                                             [' ', ' ', ' ', 'X', 'O', 'X'],
+                                             [' ', ' ', ' ', ' ', 'O', 'X'],
+                                             [' ', ' ', ' ', ' ', ' ', ' ']])
+    end
+
+    it 'returns grid avaible columns' do
+      result = [0, 2, 4, 5, 6]
+
+      expect(grid.free_columns).to eq(result)
+    end
+  end
+
   describe '#full?' do
     context 'when the grid is not full' do
       it 'returns false' do
