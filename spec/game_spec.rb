@@ -7,6 +7,7 @@ require_relative '../lib/game'
 RSpec.describe Game do
   subject(:game) { described_class.new }
   let(:players) { game.instance_variable_get(:@players) }
+  let(:grid) { game.instance_variable_get(:@grid) }
 
   describe '#start_players' do
     let(:player1) { Player.new('Claire', 'C', 1) }
@@ -50,6 +51,29 @@ RSpec.describe Game do
       it 'loops until second player changes token' do
         expect(player3).to receive(:insert_token).exactly(4).times
         game.start_players
+      end
+    end
+  end
+
+  describe '#alternate_turns' do
+    context 'while game does not end' do
+      let(:turn_times) { 10 }
+
+      before do
+        response_array = Array.new(turn_times, false) << true
+        allow(grid).to receive(:end?).exactly(turn_times + 1).times
+                                     .and_return(*response_array)
+      end
+
+      it 'plays a turn' do
+        expect(game).to receive(:play_turn).exactly(turn_times).times
+        game.alternate_turns
+      end
+
+      it 'updates @turn' do
+        expect { game.alternate_turns }
+          .to change { game.instance_variable_get(:@turn) }
+          .from(0).to(turn_times)
       end
     end
   end

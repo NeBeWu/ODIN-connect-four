@@ -15,7 +15,7 @@ class Game
 
   def play
     start
-    alternate
+    alternate_turns
     finish
   end
 
@@ -32,7 +32,14 @@ class Game
     @players[1].insert_token(fetch_token(2)) until distinct_tokens?
   end
 
-  def alternate; end
+  def alternate_turns
+    until @grid.end?
+      play_turn
+      @turn += 1
+    end
+  end
+
+  def play_turn; end
 
   def finish; end
 
