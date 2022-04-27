@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'interface'
+require_relative 'interfaces'
 
 class Grid
-  include Interface::Grid
+  include Interfaces::GridInterface
 
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }

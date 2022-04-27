@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'interface'
+require_relative 'interfaces'
 
 class Player
-  include Interface
-  include Interface::Player
+  include Interfaces
+  include Interfaces::PlayerInterface
 
   attr_reader :name, :token
 
