@@ -13,49 +13,31 @@ module Interface
     input
   end
 
-  module Grid
-    def show
-      6.times do |row|
-        print "-----------------------------\n"
+  def fetch_name(player)
+    input = fetch_input(
+      "Please, enter your name player #{player.number}.",
+      'Wrong input! Please enter 1 to 10 word characters.',
+      :validate_name
+    )
 
-        @columns.each do |column|
-          print "| #{column[row]} "
-        end
-
-        print "|\n"
-      end
-
-      print "-----------------------------\n"
-    end
+    player.insert_name(input)
   end
 
-  module Player
-    def validate_name(name)
-      name.match?(/^\w{1,10}$/)
-    end
+  def fetch_token(player)
+    input = fetch_input(
+      "Please, enter your token player #{player.number}.",
+      'Wrong input! Please enter a non-numeric word character.',
+      :validate_token
+    )
 
-    def validate_token(token)
-      token.match?(/^[a-zA-Z]$/)
-    end
+    player.insert_token(input)
+  end
 
-    def fetch_name
-      input = fetch_input(
-        'Please, enter your name player 1.',
-        'Wrong input! Please enter 1 to 10 word characters.',
-        :validate_name
-      )
+  def validate_name(name)
+    name.match?(/^\w{1,10}$/)
+  end
 
-      insert_name(input)
-    end
-
-    def fetch_token
-      input = fetch_input(
-        'Please, enter your token player 1.',
-        'Wrong input! Please enter a non-numeric word character.',
-        :validate_token
-      )
-
-      insert_token(input)
-    end
+  def validate_token(token)
+    token.match?(/^[a-zA-Z]$/)
   end
 end

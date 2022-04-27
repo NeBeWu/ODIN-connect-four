@@ -7,6 +7,7 @@ require_relative '../lib/player'
 
 RSpec.describe Interface do
   subject(:dummy_class) { Class.new.extend(described_class) }
+  let(:player) { Player.new('Pablo', 'P', '3') }
 
   describe '#fetch_input' do
     let(:message) { 'Message' }
@@ -107,23 +108,19 @@ RSpec.describe Interface do
       end
     end
   end
-end
-
-RSpec.describe Interface::Player do
-  subject(:player) { Player.new('John', 'J') }
 
   describe '#validate_name' do
     context 'when name has less than 1 or more than 10 characters' do
       it 'returns false for less than 1 characters' do
         name = ''
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be false
       end
 
       it 'returns false for more than 10 characters' do
         name = 'asdfghjklop'
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be false
       end
@@ -132,28 +129,28 @@ RSpec.describe Interface::Player do
     context 'when name is between 1 and 10 characters' do
       it 'returns true for letters' do
         name = 'Loki'
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be true
       end
 
       it 'returns true for numbers' do
         name = '148675'
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be true
       end
 
       it 'returns true for underscore' do
         name = '_'
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be true
       end
 
       it 'returns false for no word characters' do
         name = '!'
-        result = player.validate_name(name)
+        result = dummy_class.validate_name(name)
 
         expect(result).to be false
       end
@@ -164,14 +161,14 @@ RSpec.describe Interface::Player do
     context 'when token has less than 1 or more than 1 characters' do
       it 'returns false for less than 1 characters' do
         token = ''
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be false
       end
 
       it 'returns false for more than 1 characters' do
         token = 'ap'
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be false
       end
@@ -180,28 +177,28 @@ RSpec.describe Interface::Player do
     context 'when name has 1 character' do
       it 'returns true for letters' do
         token = 'H'
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be true
       end
 
       it 'returns false for numbers' do
         token = '4'
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be false
       end
 
       it 'returns false for underscore' do
         token = '_'
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be false
       end
 
       it 'returns false for no word characters' do
         token = '!'
-        result = player.validate_token(token)
+        result = dummy_class.validate_token(token)
 
         expect(result).to be false
       end
@@ -209,29 +206,29 @@ RSpec.describe Interface::Player do
   end
 
   describe '#fetch_name' do
-    let(:message) { 'Please, enter your name player 1.' }
+    let(:message) { "Please, enter your name player #{player.number}." }
     let(:error_message) { 'Wrong input! Please enter 1 to 10 word characters.' }
     let(:validation) { :validate_name }
     let(:input) { 'Name' }
 
     before do
-      allow(player).to receive(:fetch_input).and_return(input)
+      allow(dummy_class).to receive(:fetch_input).and_return(input)
     end
 
     it 'fetches input' do
-      expect(player).to receive(:fetch_input).with(message, error_message,
-                                                   validation)
-      player.fetch_name
+      expect(dummy_class).to receive(:fetch_input).with(message, error_message,
+                                                        validation)
+      dummy_class.fetch_name(player)
     end
 
     it 'inserts name' do
       expect(player).to receive(:insert_name).with(input)
-      player.fetch_name
+      dummy_class.fetch_name(player)
     end
   end
 
   describe '#fetch_token' do
-    let(:message) { 'Please, enter your token player 1.' }
+    let(:message) { "Please, enter your token player #{player.number}." }
     let(:error_message) do
       'Wrong input! Please enter a non-numeric word character.'
     end
@@ -239,18 +236,18 @@ RSpec.describe Interface::Player do
     let(:input) { 'Token' }
 
     before do
-      allow(player).to receive(:fetch_input).and_return(input)
+      allow(dummy_class).to receive(:fetch_input).and_return(input)
     end
 
     it 'fetches input' do
-      expect(player).to receive(:fetch_input).with(message, error_message,
-                                                   validation)
-      player.fetch_token
+      expect(dummy_class).to receive(:fetch_input).with(message, error_message,
+                                                        validation)
+      dummy_class.fetch_token(player)
     end
 
     it 'inserts token' do
       expect(player).to receive(:insert_token).with(input)
-      player.fetch_token
+      dummy_class.fetch_token(player)
     end
   end
 end
