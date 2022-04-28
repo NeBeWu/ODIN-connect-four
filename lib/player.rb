@@ -20,4 +20,8 @@ class Player
   def insert_number(number)
     @number = number
   end
+
+  def ==(other)
+    name == other.name && token == other.token && number == other.number
+  end
 end
