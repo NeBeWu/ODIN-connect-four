@@ -10,7 +10,7 @@ class Game
   def initialize
     @grid = Grid.new
     @players = []
-    @turn = 0
+    @turn = 1
   end
 
   def play
@@ -26,10 +26,12 @@ class Game
 
   def start_players
     2.times do |number|
-      @players << start_player(number + 1)
-    end
+      unavaiable_tokens = @players.map(&:token)
+      name = fetch_name(number + 1)
+      token = fetch_token(number + 1, unavaiable_tokens)
 
-    @players[1].insert_token(fetch_token(2)) until distinct_tokens?
+      @players << Player.new(name, token, number)
+    end
   end
 
   def alternate_turns
@@ -39,20 +41,9 @@ class Game
     end
   end
 
-  def play_turn; end
+  def play_turn
+    fetch_move(@players[@turn / 2].number, @grid.free_columns)
+  end
 
   def finish; end
-
-  private
-
-  def start_player(number)
-    name = fetch_name(number)
-    token = fetch_token(number)
-
-    Player.new(name, token, number)
-  end
-
-  def distinct_tokens?
-    @players[0].token != @players[1].token
-  end
 end
