@@ -12,6 +12,7 @@ RSpec.describe Interface do
     let(:message) { 'Message' }
     let(:error_message) { 'Error message' }
     let(:validation) { :validate }
+    let(:extra_args) { [0, true, nil, 'A'] }
     let(:input) { 'Input' }
 
     context 'when entering input correctly' do
@@ -19,23 +20,23 @@ RSpec.describe Interface do
         allow(dummy_class).to receive(:puts)
 
         allow(dummy_class).to receive(:gets).and_return(input)
-        allow(dummy_class).to receive(:send).with(validation, input)
-                                            .and_return(true)
+        allow(dummy_class).to receive(:send).with(validation, input,
+                                                  *extra_args).and_return(true)
       end
 
       it 'puts message once' do
         expect(dummy_class).to receive(:puts).with(message).once
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'does not puts error message' do
         expect(dummy_class).to_not receive(:puts).with(error_message)
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'returns the last input' do
-        expect(dummy_class.fetch_input(message, error_message, validation))
-          .to eq(input)
+        expect(dummy_class.fetch_input(message, error_message, validation,
+                                       *extra_args)).to eq(input)
       end
     end
 
@@ -45,24 +46,25 @@ RSpec.describe Interface do
 
         wrong_input = '1'
         allow(dummy_class).to receive(:gets).and_return(wrong_input, input)
-        allow(dummy_class).to receive(:send).with(validation, wrong_input)
-                                            .and_return(false)
-        allow(dummy_class).to receive(:send).with(validation, input)
-                                            .and_return(true)
+        allow(dummy_class).to receive(:send).with(validation, wrong_input,
+                                                  *extra_args).and_return(false)
+        allow(dummy_class).to receive(:send).with(validation, input,
+                                                  *extra_args).and_return(true)
       end
 
       it 'puts message once' do
         expect(dummy_class).to receive(:puts).with(message).once
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'puts error message once' do
         expect(dummy_class).to receive(:puts).with(error_message).once
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'returns the last input' do
-        expect(dummy_class.fetch_input(message, error_message, validation))
+        expect(dummy_class.fetch_input(message, error_message, validation,
+                                       *extra_args))
           .to eq(input)
       end
     end
@@ -78,32 +80,32 @@ RSpec.describe Interface do
         allow(dummy_class).to receive(:gets)
           .and_return(wrong_input1, wrong_input2, wrong_input3, wrong_input4,
                       input)
-        allow(dummy_class).to receive(:send).with(validation, wrong_input1)
-                                            .and_return(false)
-        allow(dummy_class).to receive(:send).with(validation, wrong_input2)
-                                            .and_return(false)
-        allow(dummy_class).to receive(:send).with(validation, wrong_input3)
-                                            .and_return(false)
-        allow(dummy_class).to receive(:send).with(validation, wrong_input4)
-                                            .and_return(false)
-        allow(dummy_class).to receive(:send).with(validation, input)
-                                            .and_return(true)
+        allow(dummy_class).to receive(:send).with(validation, wrong_input1,
+                                                  *extra_args).and_return(false)
+        allow(dummy_class).to receive(:send).with(validation, wrong_input2,
+                                                  *extra_args).and_return(false)
+        allow(dummy_class).to receive(:send).with(validation, wrong_input3,
+                                                  *extra_args).and_return(false)
+        allow(dummy_class).to receive(:send).with(validation, wrong_input4,
+                                                  *extra_args).and_return(false)
+        allow(dummy_class).to receive(:send).with(validation, input,
+                                                  *extra_args).and_return(true)
       end
 
       it 'puts message once' do
         expect(dummy_class).to receive(:puts).with(message).once
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'puts error message four times' do
         expect(dummy_class).to receive(:puts).with(error_message)
                                              .exactly(4).times
-        dummy_class.fetch_input(message, error_message, validation)
+        dummy_class.fetch_input(message, error_message, validation, *extra_args)
       end
 
       it 'returns the last input' do
-        expect(dummy_class.fetch_input(message, error_message, validation))
-          .to eq(input)
+        expect(dummy_class.fetch_input(message, error_message, validation,
+                                       *extra_args)).to eq(input)
       end
     end
   end
@@ -160,14 +162,16 @@ RSpec.describe Interface do
     context 'when token has less than 1 or more than 1 characters' do
       it 'returns false for less than 1 characters' do
         token = ''
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for more than 1 characters' do
         token = 'ap'
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be false
       end
@@ -176,28 +180,50 @@ RSpec.describe Interface do
     context 'when name has 1 character' do
       it 'returns true for letters' do
         token = 'H'
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be true
       end
 
       it 'returns false for numbers' do
         token = '4'
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for underscore' do
         token = '_'
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for no word characters' do
         token = '!'
-        result = dummy_class.validate_token(token)
+        unavaiable_tokens = []
+        result = dummy_class.validate_token(token, unavaiable_tokens)
+
+        expect(result).to be false
+      end
+    end
+
+    context 'when there are unavaiable tokens' do
+      it 'returns true for avaiable tokens' do
+        token = 'H'
+        unavaiable_tokens = %w[X O A]
+        result = dummy_class.validate_token(token, unavaiable_tokens)
+
+        expect(result).to be true
+      end
+
+      it 'returns false for unavaiable tokens' do
+        token = 'O'
+        unavaiable_tokens = %w[X O A]
+        result = dummy_class.validate_token(token, unavaiable_tokens)
 
         expect(result).to be false
       end
@@ -224,9 +250,11 @@ RSpec.describe Interface do
   describe '#fetch_token' do
     let(:message) { "Please, enter your token player #{number}." }
     let(:error_message) do
-      'Wrong input! Please enter a non-numeric word character.'
+      "Wrong input! Please enter a non-numeric word character
+       not included in #{unavaiable_tokens}."
     end
     let(:validation) { :validate_token }
+    let(:unavaiable_tokens) { %w[X T D A] }
     let(:input) { 'Token' }
 
     before do
@@ -234,9 +262,9 @@ RSpec.describe Interface do
     end
 
     it 'fetches input' do
-      expect(dummy_class).to receive(:fetch_input).with(message, error_message,
-                                                        validation)
-      dummy_class.fetch_token(number)
+      expect(dummy_class).to receive(:fetch_input)
+        .with(message, error_message, validation, unavaiable_tokens)
+      dummy_class.fetch_token(number, unavaiable_tokens)
     end
   end
 end

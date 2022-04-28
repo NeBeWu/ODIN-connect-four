@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Interface
-  def fetch_input(message, error_message, validation)
+  def fetch_input(message, error_message, validation, *validation_args)
     puts message
     input = gets.chomp
 
-    until send(validation, input)
+    until send(validation, input, *validation_args)
       puts error_message
       input = gets.chomp
     end
@@ -21,11 +21,13 @@ module Interface
     )
   end
 
-  def fetch_token(number)
+  def fetch_token(number, unavaiable_tokens)
     fetch_input(
       "Please, enter your token player #{number}.",
-      'Wrong input! Please enter a non-numeric word character.',
-      :validate_token
+      "Wrong input! Please enter a non-numeric word character
+       not included in #{unavaiable_tokens}.",
+      :validate_token,
+      unavaiable_tokens
     )
   end
 
@@ -33,7 +35,7 @@ module Interface
     name.match?(/^\w{1,10}$/)
   end
 
-  def validate_token(token)
-    token.match?(/^[a-zA-Z]$/)
+  def validate_token(token, unavaiable_tokens)
+    token.match?(/^[a-zA-Z]$/) && !unavaiable_tokens.include?(token)
   end
 end
