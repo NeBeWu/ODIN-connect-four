@@ -7,10 +7,10 @@ require_relative 'interface'
 class Game
   include Interface
 
-  def initialize
+  def initialize(players = [], turn = 0)
     @grid = Grid.new
-    @players = []
-    @turn = 1
+    @players = players
+    @turn = turn
   end
 
   def play
@@ -42,7 +42,11 @@ class Game
   end
 
   def play_turn
-    fetch_move(@players[@turn / 2].number, @grid.free_columns)
+    turn_player = @players.at(@turn % 2)
+
+    move = fetch_move(turn_player.name, @grid.free_columns)
+
+    @grid.insert_token(move, turn_player.token)
   end
 
   def finish; end
