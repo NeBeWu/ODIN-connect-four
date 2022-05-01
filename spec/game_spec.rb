@@ -108,6 +108,58 @@ RSpec.describe Game do
       game.play_turn
     end
   end
+
+  describe '#finish' do
+    before do
+      game.instance_variable_set(:@players, players)
+    end
+
+    context 'when player 1 wins the game' do
+      before do
+        allow(game.instance_variable_get(:@grid)).to receive(:winner?)
+          .and_return(true)
+        allow(game.instance_variable_get(:@grid)).to receive(:last_token)
+          .and_return('C')
+        allow(game).to receive(:ending_message)
+      end
+
+      it 'shows winning message for player 1' do
+        expect(game).to receive(:ending_message).with('C')
+
+        game.finish
+      end
+    end
+
+    context 'when player 2 wins the game' do
+      before do
+        allow(game.instance_variable_get(:@grid)).to receive(:winner?)
+          .and_return(true)
+        allow(game.instance_variable_get(:@grid)).to receive(:last_token)
+          .and_return('T')
+        allow(game).to receive(:ending_message)
+      end
+
+      it 'shows winning message for player 1' do
+        expect(game).to receive(:ending_message).with('T')
+
+        game.finish
+      end
+    end
+
+    context 'when no player wins the game' do
+      before do
+        allow(game.instance_variable_get(:@grid)).to receive(:winner?)
+          .and_return(false)
+        allow(game).to receive(:ending_message)
+      end
+
+      it 'shows winning message for player 1' do
+        expect(game).to receive(:ending_message).with(false)
+
+        game.finish
+      end
+    end
+  end
 end
 
 # rubocop: enable Metrics/BlockLength

@@ -49,5 +49,9 @@ class Game
     @grid.insert_token(move, turn_player.token)
   end
 
-  def finish; end
+  def finish
+    result = @grid.winner? ? @grid.last_token : false
+
+    ending_message(result)
+  end
 end
