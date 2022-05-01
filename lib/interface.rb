@@ -31,6 +31,8 @@ module Interface
     )
   end
 
+  def fetch_move(name, columns); end
+
   def validate_name(name)
     name.match?(/^\w{1,10}$/)
   end
@@ -38,4 +40,14 @@ module Interface
   def validate_token(token, unavaiable_tokens)
     token.match?(/^[a-zA-Z]$/) && !unavaiable_tokens.include?(token)
   end
+
+  def validate_move(move, columns)
+    possible_columns = columns.map(&:to_s)
+
+    possible_columns.include?(move)
+  end
+
+  def starting_message; end
+
+  def ending_message(result); end
 end

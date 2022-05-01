@@ -162,16 +162,16 @@ RSpec.describe Interface do
     context 'when token has less than 1 or more than 1 characters' do
       it 'returns false for less than 1 characters' do
         token = ''
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for more than 1 characters' do
         token = 'ap'
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
@@ -180,53 +180,87 @@ RSpec.describe Interface do
     context 'when name has 1 character' do
       it 'returns true for letters' do
         token = 'H'
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be true
       end
 
       it 'returns false for numbers' do
         token = '4'
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for underscore' do
         token = '_'
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
 
       it 'returns false for no word characters' do
         token = '!'
-        unavaiable_tokens = []
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = []
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
     end
 
-    context 'when there are unavaiable tokens' do
-      it 'returns true for avaiable tokens' do
+    context 'when there are unavailable tokens' do
+      it 'returns true for available tokens' do
         token = 'H'
-        unavaiable_tokens = %w[X O A]
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = %w[X O A]
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be true
       end
 
-      it 'returns false for unavaiable tokens' do
+      it 'returns false for unavailable tokens' do
         token = 'O'
-        unavaiable_tokens = %w[X O A]
-        result = dummy_class.validate_token(token, unavaiable_tokens)
+        unavailable_tokens = %w[X O A]
+        result = dummy_class.validate_token(token, unavailable_tokens)
 
         expect(result).to be false
       end
+    end
+  end
+
+  describe '#validate_move' do
+    it 'returns false for non-number characters' do
+      move = ''
+      columns = [0, 1, 2, 3, 4, 5, 6]
+      result = dummy_class.validate_move(move, columns)
+
+      expect(result).to be false
+    end
+
+    it 'returns false for numbers not between 0 and 6' do
+      move = '7'
+      columns = [0, 1, 2, 3, 4, 5, 6]
+      result = dummy_class.validate_move(move, columns)
+
+      expect(result).to be false
+    end
+
+    it 'returns false for not available columns' do
+      move = '2'
+      columns = [0, 1, 3, 4, 5, 6]
+      result = dummy_class.validate_move(move, columns)
+
+      expect(result).to be false
+    end
+
+    it 'returns true for available columns' do
+      move = '1'
+      columns = [1, 6]
+      result = dummy_class.validate_move(move, columns)
+
+      expect(result).to be true
     end
   end
 
@@ -251,10 +285,10 @@ RSpec.describe Interface do
     let(:message) { "Please, enter your token player #{number}." }
     let(:error_message) do
       "Wrong input! Please enter a non-numeric word character
-       not included in #{unavaiable_tokens}."
+       not included in #{unavailable_tokens}."
     end
     let(:validation) { :validate_token }
-    let(:unavaiable_tokens) { %w[X T D A] }
+    let(:unavailable_tokens) { %w[X T D A] }
     let(:input) { 'Token' }
 
     before do
@@ -263,9 +297,12 @@ RSpec.describe Interface do
 
     it 'fetches input' do
       expect(dummy_class).to receive(:fetch_input)
-        .with(message, error_message, validation, unavaiable_tokens)
-      dummy_class.fetch_token(number, unavaiable_tokens)
+        .with(message, error_message, validation, unavailable_tokens)
+      dummy_class.fetch_token(number, unavailable_tokens)
     end
+  end
+
+  describe '#fetch_move' do
   end
 end
 
