@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Grid
+  attr_reader :columns, :last_slot, :last_token
+
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }
     @last_slot = nil
