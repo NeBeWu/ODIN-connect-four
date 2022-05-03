@@ -13,6 +13,16 @@ RSpec.describe Grid do
     let(:token) { 'X' }
 
     context 'when the chosen column is empty' do
+      before do
+        grid.instance_variable_set(:@columns, [[' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' '],
+                                               [' ', ' ', ' ', ' ', ' ', ' ']])
+      end
+
       it 'adds a token in the first avaible slot' do
         starting_value = [' ', ' ', ' ', ' ', ' ', ' ']
         ending_value = [' ', ' ', ' ', ' ', ' ', token]
@@ -22,11 +32,11 @@ RSpec.describe Grid do
           .from(starting_value).to(ending_value)
       end
 
-      it 'returns the index it was inserted' do
-        method_return = grid.insert_token(column, token)
-        inserted_index = 5
+      it 'updates last move' do
+        row = 5
 
-        expect(method_return).to be(inserted_index)
+        expect(grid).to receive(:update_last_move).with(column, row, token)
+        grid.insert_token(column, token)
       end
     end
 
@@ -50,11 +60,11 @@ RSpec.describe Grid do
           .from(starting_value).to(ending_value)
       end
 
-      it 'returns the index it was inserted' do
-        method_return = grid.insert_token(column, token)
-        inserted_index = 1
+      it 'updates last move' do
+        row = 1
 
-        expect(method_return).to be(inserted_index)
+        expect(grid).to receive(:update_last_move).with(column, row, token)
+        grid.insert_token(column, token)
       end
     end
 
@@ -74,10 +84,9 @@ RSpec.describe Grid do
           .to_not(change { columns[column] })
       end
 
-      it 'returns nil' do
-        method_return = grid.insert_token(column, token)
-
-        expect(method_return).to be_nil
+      it 'does not update last move' do
+        expect(grid).to_not receive(:update_last_move)
+        grid.insert_token(column, token)
       end
     end
   end

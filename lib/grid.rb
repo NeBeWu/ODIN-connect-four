@@ -24,11 +24,17 @@ class Grid
   end
 
   def insert_token(column, token)
-    index = @columns[column].rindex(' ')
+    row = @columns[column].rindex(' ')
 
-    @columns[column][index] = token if index
+    return unless row
 
-    index
+    @columns[column][row] = token
+    update_last_move(column, row, token)
+  end
+
+  def update_last_move(column, row, token)
+    @last_slot = [column, row]
+    @last_token = token
   end
 
   def free_columns
