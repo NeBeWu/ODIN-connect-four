@@ -31,7 +31,14 @@ module Interface
     )
   end
 
-  def fetch_move(name, columns); end
+  def fetch_move(name, columns)
+    fetch_input(
+      "It is your turn #{name}, choose a column please.",
+      "Wrong input! Please enter a number contained in #{columns}.",
+      :validate_move,
+      columns
+    )
+  end
 
   def validate_name(name)
     name.match?(/^\w{1,10}$/)

@@ -7,6 +7,7 @@ require_relative '../lib/interface'
 RSpec.describe Interface do
   subject(:dummy_class) { Class.new.extend(described_class) }
   let(:number) { 1 }
+  let(:name) { 'Jordan' }
 
   describe '#fetch_input' do
     let(:message) { 'Message' }
@@ -303,6 +304,23 @@ RSpec.describe Interface do
   end
 
   describe '#fetch_move' do
+    let(:message) { "It is your turn #{name}, choose a column please." }
+    let(:error_message) do
+      "Wrong input! Please enter a number contained in #{columns}."
+    end
+    let(:validation) { :validate_move }
+    let(:columns) { %w[0 1 3 5] }
+    let(:input) { '3' }
+
+    before do
+      allow(dummy_class).to receive(:fetch_input).and_return(input)
+    end
+
+    it 'fetches input' do
+      expect(dummy_class).to receive(:fetch_input)
+        .with(message, error_message, validation, columns)
+      dummy_class.fetch_move(name, columns)
+    end
   end
 end
 
