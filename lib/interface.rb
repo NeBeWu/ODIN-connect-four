@@ -54,7 +54,19 @@ module Interface
     possible_columns.include?(move)
   end
 
-  def starting_message; end
+  def starting_message
+    print "Let's play connect-"
+    ['f', 'o', 'u', 'r', '!'].each do |char|
+      sleep(1)
+      print char
+    end
+  end
 
-  def ending_message(result); end
+  def ending_message(result)
+    if result
+      puts("Congratulations #{result.name}, you won!")
+    else
+      puts('It is a draw!')
+    end
+  end
 end

@@ -322,6 +322,28 @@ RSpec.describe Interface do
       dummy_class.fetch_move(name, columns)
     end
   end
+
+  describe '#ending_message' do
+    context 'when the game results in a player winning' do
+      let(:result) { instance_double('Player', name: 'Carl') }
+      let(:congratulation) { "Congratulations #{result.name}, you won!" }
+
+      it 'congratulates the player' do
+        expect(dummy_class).to receive(:puts).with(congratulation)
+        dummy_class.ending_message(result)
+      end
+    end
+
+    context 'when the game results in no one winning' do
+      let(:result) { nil }
+      let(:draw) { 'It is a draw!' }
+
+      it 'calls a draw' do
+        expect(dummy_class).to receive(:puts).with(draw)
+        dummy_class.ending_message(result)
+      end
+    end
+  end
 end
 
 # rubocop: enable Metrics/BlockLength
