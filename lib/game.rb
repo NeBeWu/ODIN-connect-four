@@ -50,8 +50,11 @@ class Game
   end
 
   def finish
-    result = @grid.winner? ? @grid.last_token : false
+    ending_message(game_result)
+  end
 
-    ending_message(result)
+  def game_result
+    result = @grid.winner? ? @grid.last_token : false
+    @players.select { |player| player.token == result }.first
   end
 end

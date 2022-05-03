@@ -110,6 +110,18 @@ RSpec.describe Game do
   end
 
   describe '#finish' do
+    let(:result) { nil }
+
+    before do
+      allow(game).to receive(:game_result).and_return(result)
+    end
+    it 'calls ending_message with game_result output' do
+      expect(game).to receive(:ending_message).with(result)
+      game.finish
+    end
+  end
+
+  describe '#game_result' do
     before do
       game.instance_variable_set(:@players, players)
     end
@@ -120,11 +132,10 @@ RSpec.describe Game do
           .and_return(true)
         allow(game.instance_variable_get(:@grid)).to receive(:last_token)
           .and_return('C')
-        allow(game).to receive(:ending_message)
       end
 
-      it 'shows winning message for player 1' do
-        expect(game).to receive(:ending_message).with('C')
+      it 'returns player 1' do
+        expect(game).to receive(:finish).and_return(players.first)
 
         game.finish
       end
@@ -136,11 +147,10 @@ RSpec.describe Game do
           .and_return(true)
         allow(game.instance_variable_get(:@grid)).to receive(:last_token)
           .and_return('T')
-        allow(game).to receive(:ending_message)
       end
 
-      it 'shows winning message for player 1' do
-        expect(game).to receive(:ending_message).with('T')
+      it 'returns player 2' do
+        expect(game).to receive(:finish).and_return(players.last)
 
         game.finish
       end
@@ -150,11 +160,10 @@ RSpec.describe Game do
       before do
         allow(game.instance_variable_get(:@grid)).to receive(:winner?)
           .and_return(false)
-        allow(game).to receive(:ending_message)
       end
 
-      it 'shows winning message for player 1' do
-        expect(game).to receive(:ending_message).with(false)
+      it 'returns nil' do
+        expect(game).to receive(:finish).and_return(nil)
 
         game.finish
       end
