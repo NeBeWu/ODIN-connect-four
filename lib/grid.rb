@@ -83,7 +83,7 @@ class Grid
     array = []
 
     4.times do
-      if (0..7).include?(slot.first) && (0..6).include?(slot.last)
+      if (0..6).include?(slot.first) && (0..7).include?(slot.last)
         array << @columns[slot.first][slot.last]
       end
 
