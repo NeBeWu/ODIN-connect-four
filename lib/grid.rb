@@ -5,8 +5,8 @@ class Grid
 
   def initialize
     @columns = Array.new(7) { Array.new(6, ' ') }
-    @last_slot = nil
-    @last_token = nil
+    @last_slot = [0, 0]
+    @last_token = 'O'
   end
 
   def show
