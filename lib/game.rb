@@ -44,7 +44,7 @@ class Game
   def play_turn
     turn_player = @players.at(@turn % 2)
 
-    move = fetch_move(turn_player.name, @grid.free_columns)
+    move = fetch_move(turn_player.name, @grid.free_columns).to_i
 
     @grid.insert_token(move, turn_player.token)
   end
