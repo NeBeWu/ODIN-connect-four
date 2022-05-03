@@ -127,6 +127,12 @@ RSpec.describe Game do
     before do
       allow(game).to receive(:game_result).and_return(result)
     end
+
+    it 'shows grid' do
+      expect(game.instance_variable_get(:@grid)).to receive(:show)
+      game.finish
+    end
+
     it 'calls ending_message with game_result output' do
       expect(game).to receive(:ending_message).with(result)
       game.finish

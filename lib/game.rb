@@ -51,6 +51,7 @@ class Game
   end
 
   def finish
+    @grid.show
     ending_message(game_result)
   end
 
