@@ -55,9 +55,8 @@ module Interface
   end
 
   def starting_message
-    print "Let's play connect-"
-    ['f', 'o', 'u', 'r', '!'].each do |char|
-      sleep(1)
+    "Let's play connect-four!\n".each_char do |char|
+      sleep(0.05)
       print char
     end
   end
