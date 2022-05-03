@@ -42,6 +42,12 @@ RSpec.describe Game do
         allow(game).to receive(:play_turn)
       end
 
+      it 'shows the grid' do
+        expect(game.instance_variable_get(:@grid)).to receive(:show)
+          .exactly(turns).times
+        game.alternate_turns
+      end
+
       it 'plays a turn' do
         expect(game).to receive(:play_turn).exactly(turns).times
         game.alternate_turns
@@ -62,6 +68,12 @@ RSpec.describe Game do
         allow(grid).to receive(:end?).exactly(turns + 1).times
                                      .and_return(*response_array)
         allow(game).to receive(:play_turn)
+      end
+
+      it 'does not show the grid' do
+        expect(game.instance_variable_get(:@grid)).to receive(:show)
+          .exactly(turns - 2).times
+        game.alternate_turns
       end
 
       it 'does not play a turn' do
@@ -90,7 +102,7 @@ RSpec.describe Game do
         .and_return(free_columns)
       allow(game).to receive(:fetch_move).with(turn_player.name,
                                                free_columns)
-                                         .and_return(move)
+                                         .and_return(move.to_s)
     end
 
     it 'fetches the current player move' do
@@ -103,7 +115,7 @@ RSpec.describe Game do
 
     it 'updates @grid with the move' do
       expect(game.instance_variable_get(:@grid)).to receive(:insert_token)
-        .with(move, turn_player.token)
+        .with(move - 1, turn_player.token)
 
       game.play_turn
     end
